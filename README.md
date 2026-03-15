@@ -1,59 +1,78 @@
-# ChatApp
+# Chat App  Trabajo Final Integrador
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.2.
+Clon de aplicación de chat construido con **Angular 21**, usando Standalone Components, Signals, Reactive Forms y control-flow nativo (`@if`, `@for`). Sin librerías de UI externas.
 
-## Development server
+## Requisitos
 
-To start a local development server, run:
+- Node.js 20+
+- npm 9+
+
+## Instalación y ejecución
 
 ```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La aplicación corre en `http://localhost:4200`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Build de producción
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+El output se genera en `dist/chat-app`.
 
-## Running unit tests
+## Rutas
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+| Ruta          | Descripción                             |
+|---------------|-----------------------------------------|
+| `/chats`      | Lista de contactos / chats              |
+| `/chats/:id`  | Conversación activa con un contacto     |
+| `/nuevo`      | Formulario para crear un nuevo chat     |
 
-```bash
-ng test
+## Estructura del proyecto
+
+```
+src/app/
+ core/
+    interfaces/        # Modelos: Chat, Contact, Message
+    services/          # ChatService con Signals
+ features/
+    chat-list/         # Panel lateral con buscador
+    chat-window/       # Ventana de conversación
+    new-chat/          # Formulario reactivo de nuevo chat
+ shared/
+     components/
+        contact-item/  # Ítem de contacto reutilizable
+        message-bubble/# Burbuja de mensaje con animación
+     pipes/
+         time-format    # Pipe para formatear timestamps
 ```
 
-## Running end-to-end tests
+## Cómo probar
 
-For end-to-end (e2e) testing, run:
+1. Abrí el navegador en `http://localhost:4200`
+2. Seleccioná un contacto de la lista para iniciar una conversación
+3. Escribí un mensaje y presioná Enter o el botón de enviar
+4. La app responde automáticamente tras 1-2 segundos
+5. Usá el botón `+` del sidebar para crear un nuevo chat
+6. El buscador filtra contactos en tiempo real
 
-```bash
-ng e2e
-```
+## Deploy en Vercel
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+El archivo `vercel.json` incluye el rewrite necesario para que las rutas de la SPA funcionen correctamente.
 
-## Additional Resources
+1. Subir el repositorio a GitHub
+2. Importar el proyecto en [vercel.com](https://vercel.com)
+3. Configurar: Framework  Angular, Build Command  `ng build`, Output  `dist/chat-app/browser`
+4. Hacer deploy
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Tecnologías
+
+- Angular 21 (Standalone Components, Signals, control-flow `@if`/`@for`)
+- TypeScript 5.8
+- CSS nativo con Flexbox y Grid
+- Reactive Forms con validaciones
+- Lazy loading de rutas con `loadComponent`
