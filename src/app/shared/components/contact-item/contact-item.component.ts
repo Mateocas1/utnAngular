@@ -1,12 +1,13 @@
 import { Component, input } from '@angular/core';
-import { Contact } from '../../../core/interfaces/chat';
+import { Chat } from '../../../core/interfaces/chat';
+import { TimeFormat } from '../../pipes/time-format.pipe';
 
 @Component({
   selector: 'app-contact-item',
+  imports: [TimeFormat],
   templateUrl: './contact-item.component.html',
   styleUrl: './contact-item.component.css',
 })
 export class ContactItem {
-  contact = input.required<Contact>();
-  active = input(false);
+  chat = input.required<Chat>();
 }

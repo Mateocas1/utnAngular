@@ -14,9 +14,20 @@
         @if (c.contact.status === 'online') {
           <span class="chat-window__status chat-window__status--online">En línea</span>
         } @else if (c.contact.status === 'away') {
-          <span class="chat-window__status">Ausente</span>
+          <span class="chat-window__status">
+            Ausente
+            @if (c.contact.lastSeen; as lastSeen) {
+              · visto {{ lastSeen | timeFormat }}
+            }
+          </span>
         } @else {
-          <span class="chat-window__status">Desconectado</span>
+          <span class="chat-window__status">
+            @if (c.contact.lastSeen; as lastSeen) {
+              Visto {{ lastSeen | timeFormat }}
+            } @else {
+              Desconectado
+            }
+          </span>
         }
       </div>
     </header>
@@ -32,14 +43,24 @@
     </div>
 
     <form class="chat-window__form" [formGroup]="messageForm" (ngSubmit)="send()">
-      <textarea
-        class="chat-window__input"
-        formControlName="content"
-        placeholder="Escribí un mensaje..."
-        rows="1"
-        (keydown)="onKeydown($event)"
-        aria-label="Escribir mensaje"
-      ></textarea>
+      <div class="chat-window__composer">
+        <textarea
+          class="chat-window__input"
+          [class.chat-window__input--error]="showMessageError"
+          formControlName="content"
+          placeholder="Escribí un mensaje..."
+          rows="1"
+          (keydown)="onKeydown($event)"
+          aria-label="Escribir mensaje"
+        ></textarea>
+        @if (showMessageError) {
+          @if (messageControl.errors?.['maxlength']) {
+            <span class="chat-window__error">Máximo 500 caracteres.</span>
+          } @else {
+            <span class="chat-window__error">Escribí un mensaje válido.</span>
+          }
+        }
+      </div>
       <button
         class="chat-window__send"
         type="submit"

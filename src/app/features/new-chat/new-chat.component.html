@@ -16,11 +16,11 @@
         autocomplete="off"
       />
       @if (nameErrors) {
-        @if (form.controls.name.errors?.['required']) {
+          @if (nameControl.errors?.['required'] || nameControl.errors?.['requiredTrimmed']) {
           <span class="form-field__error">El nombre es obligatorio.</span>
-        } @else if (form.controls.name.errors?.['minlength']) {
+          } @else if (nameControl.errors?.['minlength']) {
           <span class="form-field__error">Mínimo 2 caracteres.</span>
-        } @else if (form.controls.name.errors?.['maxlength']) {
+          } @else if (nameControl.errors?.['maxlength']) {
           <span class="form-field__error">Máximo 40 caracteres.</span>
         }
       }

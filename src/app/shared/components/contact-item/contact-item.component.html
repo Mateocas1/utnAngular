@@ -1,16 +1,30 @@
-<div class="contact" [class.contact--active]="active()">
+<div class="contact">
   <div class="contact__avatar-wrapper">
-    <img class="contact__avatar" [src]="contact().avatarUrl" [alt]="contact().name" />
-    <span class="contact__status" [class]="'contact__status--' + contact().status"></span>
+    <img class="contact__avatar" [src]="chat().contact.avatarUrl" [alt]="chat().contact.name" />
+    <span class="contact__status" [class]="'contact__status--' + chat().contact.status"></span>
   </div>
   <div class="contact__info">
-    <span class="contact__name">{{ contact().name }}</span>
-    @if (contact().status === 'online') {
+    <div class="contact__top-row">
+      <span class="contact__name">{{ chat().contact.name }}</span>
+      <span class="contact__time">{{ chat().lastMessageAt | timeFormat }}</span>
+    </div>
+    @if (chat().contact.status === 'online') {
       <span class="contact__meta contact__meta--online">En línea</span>
-    } @else if (contact().status === 'away') {
-      <span class="contact__meta">Ausente</span>
+    } @else if (chat().contact.status === 'away') {
+      <span class="contact__meta">
+        Ausente
+        @if (chat().contact.lastSeen; as lastSeen) {
+          · visto {{ lastSeen | timeFormat }}
+        }
+      </span>
     } @else {
-      <span class="contact__meta">Desconectado</span>
+      <span class="contact__meta">
+        @if (chat().contact.lastSeen; as lastSeen) {
+          Visto {{ lastSeen | timeFormat }}
+        } @else {
+          Desconectado
+        }
+      </span>
     }
   </div>
 </div>

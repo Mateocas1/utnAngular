@@ -1,52 +1,74 @@
-import { Component, OnInit, computed, inject, signal, viewChild, ElementRef, effect } from '@angular/core';
+import { Component, ElementRef, computed, effect, inject, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { ChatService } from '../../core/services/chat.service';
 import { MessageBubble } from '../../shared/components/message-bubble/message-bubble.component';
 import { Chat } from '../../core/interfaces/chat';
+import { TimeFormat } from '../../shared/pipes/time-format.pipe';
+
+function requiredTrimmed(control: AbstractControl): ValidationErrors | null {
+  return control.value?.trim() ? null : { requiredTrimmed: true };
+}
 
 @Component({
   selector: 'app-chat-window',
-  imports: [ReactiveFormsModule, MessageBubble],
+  imports: [ReactiveFormsModule, MessageBubble, TimeFormat],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.css',
 })
-export class ChatWindow implements OnInit {
+export class ChatWindow {
   private readonly chatService = inject(ChatService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private readonly chatId = signal('');
+  private readonly routeParams = toSignal(this.route.paramMap, {
+    initialValue: this.route.snapshot.paramMap,
+  });
 
-  chat = computed<Chat | undefined>(() =>
-    this.chatService.getChatById(this.chatId())
-  );
+  readonly chatId = computed(() => this.routeParams().get('id') ?? '');
 
-  messageForm = new FormGroup({
-    content: new FormControl('', [Validators.required, Validators.minLength(1)]),
+  readonly chat = computed<Chat | undefined>(() => this.chatService.getChatById(this.chatId()));
+
+  readonly messageControl = new FormControl('', {
+    nonNullable: true,
+    validators: [requiredTrimmed, Validators.required, Validators.maxLength(500)],
+  });
+
+  readonly messageForm = new FormGroup({
+    content: this.messageControl,
   });
 
   private readonly messagesEnd = viewChild<ElementRef>('messagesEnd');
 
   constructor() {
     effect(() => {
-      const _ = this.chat()?.messages.length;
+      this.chat()?.messages.length;
       setTimeout(() => this.scrollToBottom(), 0);
     });
   }
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.chatId.set(params.get('id') ?? '');
-    });
-  }
-
   send(): void {
-    const content = this.messageForm.value.content?.trim();
-    if (!content || this.messageForm.invalid) return;
+    if (this.messageForm.invalid) {
+      this.messageControl.markAsTouched();
+      return;
+    }
+
+    const content = this.messageControl.value.trim();
+    if (!content) {
+      this.messageControl.markAsTouched();
+      return;
+    }
 
     this.chatService.sendMessage(this.chatId(), content);
-    this.messageForm.reset();
+    this.messageControl.reset('');
   }
 
   onKeydown(event: KeyboardEvent): void {
@@ -58,6 +80,10 @@ export class ChatWindow implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/chats']);
+  }
+
+  get showMessageError(): boolean {
+    return this.messageControl.invalid && (this.messageControl.touched || this.messageControl.dirty);
   }
 
   private scrollToBottom(): void {

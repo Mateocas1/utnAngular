@@ -34,7 +34,7 @@
         class="sidebar__link"
         [attr.aria-label]="'Chat con ' + chat.contact.name"
       >
-        <app-contact-item [contact]="chat.contact" />
+        <app-contact-item [chat]="chat" />
       </a>
     } @empty {
       <p class="sidebar__empty">No se encontraron chats.</p>

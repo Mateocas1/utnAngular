@@ -35,16 +35,40 @@ const INITIAL_CONTACTS: Contact[] = [
   },
 ];
 
+function createMessage(content: string, sender: 'user' | 'app', sentAt = new Date()): Message {
+  return {
+    id: crypto.randomUUID(),
+    content,
+    sender,
+    sentAt,
+  };
+}
+
+function createChat(contact: Contact, messages: Message[] = []): Chat {
+  return {
+    id: contact.id,
+    contact,
+    messages,
+    lastMessageAt: messages.at(-1)?.sentAt ?? contact.lastSeen ?? new Date(),
+  };
+}
+
+const INITIAL_CHATS: Chat[] = [
+  createChat(INITIAL_CONTACTS[0], [
+    createMessage('Hola, ¿tenés un minuto para revisar el trabajo práctico?', 'app', new Date(Date.now() - 18 * 60 * 1000)),
+    createMessage('Sí, mandámelo y lo veo.', 'user', new Date(Date.now() - 15 * 60 * 1000)),
+  ]),
+  createChat(INITIAL_CONTACTS[1], [
+    createMessage('Después te respondo, estoy saliendo de clase.', 'app', new Date(Date.now() - 32 * 60 * 1000)),
+  ]),
+  createChat(INITIAL_CONTACTS[2], [
+    createMessage('Cuando puedas, avisame y retomamos la conversación.', 'app', new Date(Date.now() - 2 * 60 * 60 * 1000)),
+  ]),
+];
+
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-  private readonly _chats = signal<Chat[]>(
-    INITIAL_CONTACTS.map((contact) => ({
-      id: contact.id,
-      contact,
-      messages: [],
-      lastMessageAt: new Date(),
-    }))
-  );
+  private readonly _chats = signal<Chat[]>(INITIAL_CHATS);
 
   readonly chats = this._chats.asReadonly();
 
@@ -67,13 +91,7 @@ export class ChatService {
   }
 
   addChat(contact: Contact): void {
-    const newChat: Chat = {
-      id: contact.id,
-      contact,
-      messages: [],
-      lastMessageAt: new Date(),
-    };
-    this._chats.update((chats) => [...chats, newChat]);
+    this._chats.update((chats) => [createChat(contact), ...chats]);
   }
 
   sendMessage(chatId: string, content: string): void {
@@ -86,7 +104,7 @@ export class ChatService {
     const delay = 1000 + Math.random() * 1500;
     setTimeout(() => {
       const reply = AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)];
-      const message = this.buildMessage(reply, 'app');
+      const message = createMessage(reply, 'app');
       this.appendMessage(chatId, message);
     }, delay);
   }
@@ -95,18 +113,21 @@ export class ChatService {
     this._chats.update((chats) =>
       chats.map((chat) =>
         chat.id === chatId
-          ? { ...chat, messages: [...chat.messages, message], lastMessageAt: message.sentAt }
+          ? {
+              ...chat,
+              contact:
+                message.sender === 'app' && chat.contact.status !== 'online'
+                  ? { ...chat.contact, lastSeen: message.sentAt }
+                  : chat.contact,
+              messages: [...chat.messages, message],
+              lastMessageAt: message.sentAt,
+            }
           : chat
       )
     );
   }
 
   private buildMessage(content: string, sender: 'user' | 'app'): Message {
-    return {
-      id: crypto.randomUUID(),
-      content,
-      sender,
-      sentAt: new Date(),
-    };
+    return createMessage(content, sender);
   }
 }

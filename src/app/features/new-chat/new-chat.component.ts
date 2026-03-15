@@ -1,8 +1,19 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChatService } from '../../core/services/chat.service';
 import { Contact, ContactStatus } from '../../core/interfaces/chat';
+
+function requiredTrimmed(control: AbstractControl): ValidationErrors | null {
+  return control.value?.trim() ? null : { requiredTrimmed: true };
+}
 
 @Component({
   selector: 'app-new-chat',
@@ -20,18 +31,28 @@ export class NewChat {
     { value: 'offline', label: 'Desconectado' },
   ];
 
-  form = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(40),
-    ]),
-    status: new FormControl<ContactStatus>('online', Validators.required),
+  readonly form = new FormGroup({
+    name: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        requiredTrimmed,
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(40),
+      ],
+    }),
+    status: new FormControl<ContactStatus>('online', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
+  get nameControl(): FormControl<string> {
+    return this.form.controls.name;
+  }
+
   get nameErrors(): boolean {
-    const ctrl = this.form.controls.name;
-    return ctrl.invalid && ctrl.touched;
+    return this.nameControl.invalid && this.nameControl.touched;
   }
 
   submit(): void {
@@ -40,13 +61,15 @@ export class NewChat {
       return;
     }
 
-    const { name, status } = this.form.value;
-    const seed = encodeURIComponent(name!.replace(/\s+/g, ''));
+    const name = this.nameControl.value.trim();
+    const status = this.form.controls.status.value;
+    const seed = encodeURIComponent(name.replace(/\s+/g, ''));
     const newContact: Contact = {
       id: crypto.randomUUID(),
-      name: name!.trim(),
+      name,
       avatarUrl: `https://api.dicebear.com/9.x/thumbs/svg?seed=${seed}`,
-      status: status!,
+      status,
+      lastSeen: status === 'online' ? undefined : new Date(),
     };
 
     this.chatService.addChat(newContact);
