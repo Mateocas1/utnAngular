@@ -16,10 +16,7 @@ export class App {
   readonly showSidebar = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
-      map((e) => {
-        const url = (e as NavigationEnd).urlAfterRedirects;
-        return url === '/chats' || url === '/nuevo';
-      })
+      map((e) => (e as NavigationEnd).urlAfterRedirects === '/chats')
     ),
     { initialValue: true }
   );

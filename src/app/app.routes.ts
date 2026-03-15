@@ -9,7 +9,7 @@ export const routes: Routes = [
   {
     path: 'chats',
     loadComponent: () =>
-      import('./features/chat-list/chat-list.component').then((m) => m.ChatList),
+      import('./features/chat-welcome/chat-welcome.component').then((m) => m.ChatWelcome),
   },
   {
     path: 'chats/:id',

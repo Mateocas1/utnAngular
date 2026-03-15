@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, viewChild, ElementRef, effect } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, viewChild, ElementRef, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChatService } from '../../core/services/chat.service';
@@ -16,10 +16,10 @@ export class ChatWindow implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private chatId = '';
+  private readonly chatId = signal('');
 
   chat = computed<Chat | undefined>(() =>
-    this.chatService.getChatById(this.chatId)
+    this.chatService.getChatById(this.chatId())
   );
 
   messageForm = new FormGroup({
@@ -37,7 +37,7 @@ export class ChatWindow implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.chatId = params.get('id') ?? '';
+      this.chatId.set(params.get('id') ?? '');
     });
   }
 
@@ -45,7 +45,7 @@ export class ChatWindow implements OnInit {
     const content = this.messageForm.value.content?.trim();
     if (!content || this.messageForm.invalid) return;
 
-    this.chatService.sendMessage(this.chatId, content);
+    this.chatService.sendMessage(this.chatId(), content);
     this.messageForm.reset();
   }
 
