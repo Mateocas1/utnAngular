@@ -1,47 +1,63 @@
 <div class="new-chat">
   <header class="new-chat__header">
+    <p class="new-chat__eyebrow">Crear conversación</p>
     <h2 class="new-chat__title">Nuevo chat</h2>
+    <p class="new-chat__description">Agregá un contacto, definí su estado inicial y empezá una nueva conversación.</p>
   </header>
 
-  <form class="new-chat__form" [formGroup]="form" (ngSubmit)="submit()">
-    <div class="form-field">
-      <label class="form-field__label" for="contactName">Nombre del contacto</label>
-      <input
-        id="contactName"
-        class="form-field__input"
-        [class.form-field__input--error]="nameErrors"
-        type="text"
-        formControlName="name"
-        placeholder="Ej: María González"
-        autocomplete="off"
-      />
-      @if (nameErrors) {
+  <div class="new-chat__body">
+    <form class="new-chat__form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-field">
+        <label class="form-field__label" for="contactName">Nombre del contacto</label>
+        <input
+          id="contactName"
+          class="form-field__input"
+          [class.form-field__input--error]="nameErrors"
+          type="text"
+          formControlName="name"
+          placeholder="Ej: María González"
+          autocomplete="off"
+        />
+        @if (nameErrors) {
           @if (nameControl.errors?.['required'] || nameControl.errors?.['requiredTrimmed']) {
-          <span class="form-field__error">El nombre es obligatorio.</span>
+            <span class="form-field__error">El nombre es obligatorio.</span>
           } @else if (nameControl.errors?.['minlength']) {
-          <span class="form-field__error">Mínimo 2 caracteres.</span>
+            <span class="form-field__error">Mínimo 2 caracteres.</span>
           } @else if (nameControl.errors?.['maxlength']) {
-          <span class="form-field__error">Máximo 40 caracteres.</span>
+            <span class="form-field__error">Máximo 40 caracteres.</span>
+          }
         }
-      }
-    </div>
+      </div>
 
-    <div class="form-field">
-      <label class="form-field__label" for="contactStatus">Estado inicial</label>
-      <select
-        id="contactStatus"
-        class="form-field__input form-field__select"
-        formControlName="status"
-      >
-        @for (s of statuses; track s.value) {
-          <option [value]="s.value">{{ s.label }}</option>
-        }
-      </select>
-    </div>
+      <div class="form-field">
+        <label class="form-field__label" for="contactStatus">Estado inicial</label>
+        <select
+          id="contactStatus"
+          class="form-field__input form-field__select"
+          formControlName="status"
+        >
+          @for (s of statuses; track s.value) {
+            <option [value]="s.value">{{ s.label }}</option>
+          }
+        </select>
+      </div>
 
-    <div class="new-chat__actions">
-      <button type="button" class="btn btn--secondary" (click)="cancel()">Cancelar</button>
-      <button type="submit" class="btn btn--primary">Crear chat</button>
-    </div>
-  </form>
+      <div class="new-chat__actions">
+        <button type="button" class="btn btn--secondary" (click)="cancel()">Cancelar</button>
+        <button type="submit" class="btn btn--primary">Crear chat</button>
+      </div>
+    </form>
+
+    <aside class="new-chat__aside" aria-hidden="true">
+      <div class="new-chat__badge">Vista previa</div>
+      <div class="new-chat__preview-card">
+        <div class="new-chat__preview-avatar"></div>
+        <div class="new-chat__preview-lines">
+          <span class="new-chat__preview-line new-chat__preview-line--title"></span>
+          <span class="new-chat__preview-line"></span>
+        </div>
+      </div>
+      <p class="new-chat__aside-copy">La conversación aparecerá automáticamente en la barra lateral con su avatar y estado inicial.</p>
+    </aside>
+  </div>
 </div>

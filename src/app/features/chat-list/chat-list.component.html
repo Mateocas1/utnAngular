@@ -1,6 +1,9 @@
 <aside class="sidebar">
   <header class="sidebar__header">
-    <h1 class="sidebar__title">Chats</h1>
+    <div>
+      <p class="sidebar__eyebrow">Panel de conversaciones</p>
+      <h1 class="sidebar__title">Chats</h1>
+    </div>
     <button class="sidebar__btn-new" (click)="navigateToNew()" aria-label="Nuevo chat">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -24,6 +27,11 @@
       (ngModelChange)="onSearchChange()"
       aria-label="Buscar chats"
     />
+  </div>
+
+  <div class="sidebar__summary">
+    <span class="sidebar__summary-label">Conversaciones activas</span>
+    <span class="sidebar__summary-value">{{ chats().length }}</span>
   </div>
 
   <nav class="sidebar__list">

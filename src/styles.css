@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
+
 *,
 *::before,
 *::after {
@@ -7,35 +9,53 @@
 }
 
 :root {
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
+  --accent: #d8643d;
+  --accent-hover: #bc4e29;
+  --accent-soft: rgba(216, 100, 61, 0.16);
+  --success: #2d8f68;
+  --warning: #d3982b;
+  --neutral-950: #172126;
+  --neutral-900: #24343c;
+  --neutral-700: #56646c;
+  --neutral-500: #88949a;
+  --neutral-300: #d4ddd9;
+  --neutral-200: #e6ece8;
+  --neutral-100: #f4f1ea;
+  --neutral-50: #fbf8f3;
 
-  --main-bg: #f9fafb;
-  --sidebar-bg: #ffffff;
-  --surface: #ffffff;
-  --surface-alt: #e5e7eb;
+  --main-bg: #f4efe8;
+  --sidebar-bg: rgba(251, 248, 243, 0.82);
+  --surface: rgba(255, 252, 247, 0.9);
+  --surface-strong: #fffdf9;
+  --surface-alt: #dfe7e5;
+  --hover-bg: rgba(27, 53, 61, 0.06);
+  --active-bg: rgba(216, 100, 61, 0.12);
+  --input-bg: rgba(255, 255, 255, 0.72);
+  --border-color: rgba(36, 52, 60, 0.1);
+  --shadow-soft: 0 22px 55px rgba(30, 45, 50, 0.12);
+  --shadow-card: 0 10px 30px rgba(31, 40, 45, 0.08);
 
-  --hover-bg: #f3f4f6;
-  --active-bg: #eef2ff;
-  --input-bg: #f3f4f6;
-  --border-color: #e5e7eb;
+  --text-primary: var(--neutral-950);
+  --text-secondary: var(--neutral-900);
+  --text-muted: var(--neutral-700);
 
-  --text-primary: #111827;
-  --text-secondary: #374151;
-  --text-muted: #9ca3af;
-
-  --bubble-user-bg: #6366f1;
-  --bubble-user-text: #ffffff;
-  --bubble-app-bg: #ffffff;
-  --bubble-app-text: #111827;
+  --bubble-user-bg: linear-gradient(135deg, #d8643d 0%, #f08b60 100%);
+  --bubble-user-text: #fffaf6;
+  --bubble-app-bg: rgba(255, 255, 255, 0.88);
+  --bubble-app-text: var(--neutral-950);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
   font-size: 16px;
   color: var(--text-primary);
   background-color: var(--main-bg);
+  background-image:
+    radial-gradient(circle at top left, rgba(216, 100, 61, 0.18), transparent 32%),
+    radial-gradient(circle at top right, rgba(45, 143, 104, 0.14), transparent 28%),
+    linear-gradient(135deg, #f8f4ed 0%, #f0ebe4 45%, #ebe7df 100%);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 html,
@@ -45,4 +65,11 @@ body {
 
 body {
   min-height: 100dvh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
