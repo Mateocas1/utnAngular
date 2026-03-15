@@ -5,4 +5,5 @@ export interface Message {
   content: string;
   sender: MessageSender;
   sentAt: Date;
+  status?: 'sending' | 'sent';
 }

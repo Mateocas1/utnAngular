@@ -41,6 +41,32 @@
   line-height: 1;
 }
 
+.sidebar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar__btn-theme {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--hover-bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.sidebar__btn-theme:hover {
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  transform: rotate(15deg);
+}
+
 .sidebar__btn-new {
   display: flex;
   align-items: center;

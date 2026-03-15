@@ -73,3 +73,41 @@ select,
 textarea {
   font: inherit;
 }
+
+[data-theme='dark'] {
+  --accent: #e8784f;
+  --accent-hover: #d8643d;
+  --accent-soft: rgba(232, 120, 79, 0.18);
+  --success: #3ab57a;
+  --warning: #e0aa45;
+
+  --main-bg: #111b1e;
+  --sidebar-bg: rgba(17, 27, 30, 0.9);
+  --surface: rgba(22, 34, 38, 0.92);
+  --surface-strong: #1c2e33;
+  --surface-alt: #2a3c42;
+  --hover-bg: rgba(255, 255, 255, 0.06);
+  --active-bg: rgba(232, 120, 79, 0.14);
+  --input-bg: rgba(255, 255, 255, 0.07);
+  --border-color: rgba(255, 255, 255, 0.09);
+  --shadow-soft: 0 22px 55px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  --text-primary: #e8eeed;
+  --text-secondary: #c4cfcc;
+  --text-muted: #7a9099;
+
+  --bubble-user-bg: linear-gradient(135deg, #e8784f 0%, #f5a07a 100%);
+  --bubble-user-text: #fff8f4;
+  --bubble-app-bg: rgba(38, 56, 62, 0.9);
+  --bubble-app-text: #e8eeed;
+
+  color-scheme: dark;
+}
+
+[data-theme='dark'] body {
+  background-image:
+    radial-gradient(circle at top left, rgba(232, 120, 79, 0.14), transparent 32%),
+    radial-gradient(circle at top right, rgba(58, 181, 122, 0.1), transparent 28%),
+    linear-gradient(135deg, #111b1e 0%, #131f24 45%, #162128 100%);
+}

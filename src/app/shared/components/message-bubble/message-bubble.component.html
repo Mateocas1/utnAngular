@@ -1,4 +1,12 @@
 <div class="bubble" [class.bubble--user]="message().sender === 'user'" [class.bubble--app]="message().sender === 'app'">
   <p class="bubble__text">{{ message().content }}</p>
-  <span class="bubble__time">{{ message().sentAt | timeFormat }}</span>
+  <span class="bubble__meta">
+    <span class="bubble__time">{{ message().sentAt | timeFormat }}</span>
+    @if (message().sender === 'user' && message().status === 'sent') {
+      <svg class="bubble__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    }
+  </span>
 </div>

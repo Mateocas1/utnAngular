@@ -39,6 +39,9 @@
       @for (msg of c.messages; track msg.id) {
         <app-message-bubble [message]="msg" />
       }
+      @if (isTyping()) {
+        <app-typing-indicator />
+      }
       <div #messagesEnd></div>
     </div>
 
@@ -49,7 +52,7 @@
           [class.chat-window__input--error]="showMessageError"
           formControlName="content"
           placeholder="Escribí un mensaje..."
-          rows="1"
+          appAutoResize
           (keydown)="onKeydown($event)"
           aria-label="Escribir mensaje"
         ></textarea>

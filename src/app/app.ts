@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, effect, Renderer2 } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -12,6 +12,9 @@ import { ChatList } from './features/chat-list/chat-list.component';
 })
 export class App {
   private readonly router = inject(Router);
+  private readonly renderer = inject(Renderer2);
+
+  readonly isDark = signal(false);
 
   readonly showSidebar = toSignal(
     this.router.events.pipe(
@@ -20,4 +23,23 @@ export class App {
     ),
     { initialValue: true }
   );
+
+  constructor() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') this.isDark.set(true);
+
+    effect(() => {
+      const dark = this.isDark();
+      if (dark) {
+        this.renderer.setAttribute(document.documentElement, 'data-theme', 'dark');
+      } else {
+        this.renderer.removeAttribute(document.documentElement, 'data-theme');
+      }
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    });
+  }
+
+  toggleTheme(): void {
+    this.isDark.update((v) => !v);
+  }
 }

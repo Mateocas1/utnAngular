@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../core/services/chat.service';
@@ -16,6 +16,9 @@ export class ChatList {
 
   readonly chats = this.chatService.filteredChats;
   searchTerm = '';
+
+  readonly isDark = input(false);
+  readonly themeToggle = output<void>();
 
   onSearchChange(): void {
     this.chatService.setSearchTerm(this.searchTerm);

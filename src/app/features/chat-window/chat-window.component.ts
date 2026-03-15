@@ -11,6 +11,8 @@ import {
 } from '@angular/forms';
 import { ChatService } from '../../core/services/chat.service';
 import { MessageBubble } from '../../shared/components/message-bubble/message-bubble.component';
+import { TypingIndicator } from '../../shared/components/typing-indicator/typing-indicator.component';
+import { AutoResize } from '../../shared/directives/auto-resize.directive';
 import { Chat } from '../../core/interfaces/chat';
 import { TimeFormat } from '../../shared/pipes/time-format.pipe';
 
@@ -20,7 +22,7 @@ function requiredTrimmed(control: AbstractControl): ValidationErrors | null {
 
 @Component({
   selector: 'app-chat-window',
-  imports: [ReactiveFormsModule, MessageBubble, TimeFormat],
+  imports: [ReactiveFormsModule, MessageBubble, TypingIndicator, AutoResize, TimeFormat],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.css',
 })
@@ -36,6 +38,8 @@ export class ChatWindow {
   readonly chatId = computed(() => this.routeParams().get('id') ?? '');
 
   readonly chat = computed<Chat | undefined>(() => this.chatService.getChatById(this.chatId()));
+
+  readonly isTyping = computed(() => this.chatService.typingChatId() === this.chatId());
 
   readonly messageControl = new FormControl('', {
     nonNullable: true,

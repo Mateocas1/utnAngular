@@ -69,8 +69,10 @@ const INITIAL_CHATS: Chat[] = [
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private readonly _chats = signal<Chat[]>(INITIAL_CHATS);
+  private readonly _typingChatId = signal<string | null>(null);
 
   readonly chats = this._chats.asReadonly();
+  readonly typingChatId = this._typingChatId.asReadonly();
 
   readonly filteredChats = computed(() => {
     const term = this._searchTerm().toLowerCase().trim();
@@ -95,16 +97,18 @@ export class ChatService {
   }
 
   sendMessage(chatId: string, content: string): void {
-    const message = this.buildMessage(content, 'user');
+    const message: Message = { ...this.buildMessage(content, 'user'), status: 'sent' };
     this.appendMessage(chatId, message);
     this.scheduleAutoReply(chatId);
   }
 
   private scheduleAutoReply(chatId: string): void {
     const delay = 1000 + Math.random() * 1500;
+    this._typingChatId.set(chatId);
     setTimeout(() => {
       const reply = AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)];
       const message = createMessage(reply, 'app');
+      this._typingChatId.set(null);
       this.appendMessage(chatId, message);
     }, delay);
   }
