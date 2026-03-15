@@ -1,0 +1,32 @@
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--main-bg);
+}
+
+.app-shell__sidebar {
+  flex-shrink: 0;
+}
+
+.app-shell__main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 767px) {
+  .app-shell__sidebar {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .app-shell__sidebar--hidden {
+    display: none;
+  }
+
+  .app-shell__main--hidden {
+    display: none;
+  }
+}

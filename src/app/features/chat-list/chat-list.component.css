@@ -9,6 +9,14 @@
   overflow: hidden;
 }
 
+@media (max-width: 767px) {
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    border-right: none;
+  }
+}
+
 .sidebar__header {
   display: flex;
   justify-content: space-between;

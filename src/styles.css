@@ -1,1 +1,44 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+
+  --main-bg: #f9fafb;
+  --sidebar-bg: #ffffff;
+  --surface: #ffffff;
+  --surface-alt: #e5e7eb;
+
+  --hover-bg: #f3f4f6;
+  --active-bg: #eef2ff;
+  --input-bg: #f3f4f6;
+  --border-color: #e5e7eb;
+
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #9ca3af;
+
+  --bubble-user-bg: #6366f1;
+  --bubble-user-text: #ffffff;
+  --bubble-app-bg: #ffffff;
+  --bubble-app-text: #111827;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  color: var(--text-primary);
+  background-color: var(--main-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body {
+  height: 100%;
+}
