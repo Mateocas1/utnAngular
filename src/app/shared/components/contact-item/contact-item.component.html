@@ -1,0 +1,16 @@
+<div class="contact" [class.contact--active]="active()">
+  <div class="contact__avatar-wrapper">
+    <img class="contact__avatar" [src]="contact().avatarUrl" [alt]="contact().name" />
+    <span class="contact__status" [class]="'contact__status--' + contact().status"></span>
+  </div>
+  <div class="contact__info">
+    <span class="contact__name">{{ contact().name }}</span>
+    @if (contact().status === 'online') {
+      <span class="contact__meta contact__meta--online">En línea</span>
+    } @else if (contact().status === 'away') {
+      <span class="contact__meta">Ausente</span>
+    } @else {
+      <span class="contact__meta">Desconectado</span>
+    }
+  </div>
+</div>

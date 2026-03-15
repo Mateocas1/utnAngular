@@ -1,0 +1,43 @@
+<aside class="sidebar">
+  <header class="sidebar__header">
+    <h1 class="sidebar__title">Chats</h1>
+    <button class="sidebar__btn-new" (click)="navigateToNew()" aria-label="Nuevo chat">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+           stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="sidebar__search">
+    <svg class="sidebar__search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      class="sidebar__search-input"
+      type="text"
+      placeholder="Buscar chats..."
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()"
+      aria-label="Buscar chats"
+    />
+  </div>
+
+  <nav class="sidebar__list">
+    @for (chat of chats(); track chat.id) {
+      <a
+        [routerLink]="['/chats', chat.id]"
+        routerLinkActive="active-link"
+        class="sidebar__link"
+        [attr.aria-label]="'Chat con ' + chat.contact.name"
+      >
+        <app-contact-item [contact]="chat.contact" />
+      </a>
+    } @empty {
+      <p class="sidebar__empty">No se encontraron chats.</p>
+    }
+  </nav>
+</aside>
