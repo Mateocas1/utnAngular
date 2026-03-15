@@ -1,0 +1,4 @@
+<div class="bubble" [class.bubble--user]="message().sender === 'user'" [class.bubble--app]="message().sender === 'app'">
+  <p class="bubble__text">{{ message().content }}</p>
+  <span class="bubble__time">{{ message().sentAt | timeFormat }}</span>
+</div>

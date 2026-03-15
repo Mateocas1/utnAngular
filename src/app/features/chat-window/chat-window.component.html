@@ -1,0 +1,63 @@
+@if (chat(); as c) {
+  <section class="chat-window">
+    <header class="chat-window__header">
+      <button class="chat-window__back" (click)="goBack()" aria-label="Volver">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <img class="chat-window__avatar" [src]="c.contact.avatarUrl" [alt]="c.contact.name" />
+      <div class="chat-window__contact">
+        <span class="chat-window__name">{{ c.contact.name }}</span>
+        @if (c.contact.status === 'online') {
+          <span class="chat-window__status chat-window__status--online">En línea</span>
+        } @else if (c.contact.status === 'away') {
+          <span class="chat-window__status">Ausente</span>
+        } @else {
+          <span class="chat-window__status">Desconectado</span>
+        }
+      </div>
+    </header>
+
+    <div class="chat-window__messages">
+      @if (c.messages.length === 0) {
+        <p class="chat-window__empty">Iniciá la conversación 👋</p>
+      }
+      @for (msg of c.messages; track msg.id) {
+        <app-message-bubble [message]="msg" />
+      }
+      <div #messagesEnd></div>
+    </div>
+
+    <form class="chat-window__form" [formGroup]="messageForm" (ngSubmit)="send()">
+      <textarea
+        class="chat-window__input"
+        formControlName="content"
+        placeholder="Escribí un mensaje..."
+        rows="1"
+        (keydown)="onKeydown($event)"
+        aria-label="Escribir mensaje"
+      ></textarea>
+      <button
+        class="chat-window__send"
+        type="submit"
+        [disabled]="messageForm.invalid"
+        aria-label="Enviar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </form>
+  </section>
+} @else {
+  <div class="chat-window__not-found">
+    <p>Chat no encontrado.</p>
+    <button (click)="goBack()">Volver a chats</button>
+  </div>
+}
