@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, effect, signal } from '@angular/core';
 import { Chat, Contact } from '../interfaces/chat';
 import { Message } from '../interfaces/message';
 
@@ -11,6 +11,8 @@ const AUTO_REPLIES = [
   'Estoy de acuerdo contigo.',
   'No había pensado en eso antes.',
 ];
+
+const CHATS_STORAGE_KEY = 'chat-app:chats';
 
 const INITIAL_CONTACTS: Contact[] = [
   {
@@ -84,6 +86,17 @@ export class ChatService {
 
   private readonly _searchTerm = signal('');
 
+  constructor() {
+    const storedChats = this.loadChatsFromStorage();
+    if (storedChats) {
+      this._chats.set(storedChats);
+    }
+
+    effect(() => {
+      this.saveChatsToStorage(this._chats());
+    });
+  }
+
   setSearchTerm(term: string): void {
     this._searchTerm.set(term);
   }
@@ -133,5 +146,101 @@ export class ChatService {
 
   private buildMessage(content: string, sender: 'user' | 'app'): Message {
     return createMessage(content, sender);
+  }
+
+  private saveChatsToStorage(chats: Chat[]): void {
+    try {
+      localStorage.setItem(CHATS_STORAGE_KEY, JSON.stringify(chats));
+    } catch {
+      // Ignore write errors (private mode, quota exceeded, etc.).
+    }
+  }
+
+  private loadChatsFromStorage(): Chat[] | null {
+    try {
+      const raw = localStorage.getItem(CHATS_STORAGE_KEY);
+      if (!raw) return null;
+
+      const parsed: unknown = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return null;
+
+      const chats = parsed
+        .map((item) => this.normalizeChat(item))
+        .filter((chat): chat is Chat => chat !== null);
+
+      return chats.length > 0 ? chats : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private normalizeChat(value: unknown): Chat | null {
+    if (!value || typeof value !== 'object') return null;
+    const rawChat = value as Record<string, unknown>;
+
+    if (!rawChat['contact'] || typeof rawChat['contact'] !== 'object') return null;
+    const rawContact = rawChat['contact'] as Record<string, unknown>;
+
+    if (typeof rawChat['id'] !== 'string') return null;
+    if (typeof rawContact['id'] !== 'string') return null;
+    if (typeof rawContact['name'] !== 'string') return null;
+    if (typeof rawContact['avatarUrl'] !== 'string') return null;
+
+    const status = rawContact['status'];
+    if (status !== 'online' && status !== 'offline' && status !== 'away') return null;
+
+    const contactLastSeen = this.parseDate(rawContact['lastSeen']);
+    const contact: Contact = {
+      id: rawContact['id'],
+      name: rawContact['name'],
+      avatarUrl: rawContact['avatarUrl'],
+      status,
+      ...(contactLastSeen ? { lastSeen: contactLastSeen } : {}),
+    };
+
+    const rawMessages = Array.isArray(rawChat['messages']) ? rawChat['messages'] : [];
+    const messages = rawMessages
+      .map((message) => this.normalizeMessage(message))
+      .filter((message): message is Message => message !== null);
+
+    const parsedLastMessageAt = this.parseDate(rawChat['lastMessageAt']);
+    const lastMessageAt =
+      parsedLastMessageAt ?? messages.at(-1)?.sentAt ?? contact.lastSeen ?? new Date();
+
+    return {
+      id: rawChat['id'],
+      contact,
+      messages,
+      lastMessageAt,
+    };
+  }
+
+  private normalizeMessage(value: unknown): Message | null {
+    if (!value || typeof value !== 'object') return null;
+    const rawMessage = value as Record<string, unknown>;
+
+    if (typeof rawMessage['id'] !== 'string') return null;
+    if (typeof rawMessage['content'] !== 'string') return null;
+    if (rawMessage['sender'] !== 'user' && rawMessage['sender'] !== 'app') return null;
+
+    const sentAt = this.parseDate(rawMessage['sentAt']);
+    if (!sentAt) return null;
+
+    const status = rawMessage['status'];
+    const normalizedStatus = status === 'sending' || status === 'sent' ? status : undefined;
+
+    return {
+      id: rawMessage['id'],
+      content: rawMessage['content'],
+      sender: rawMessage['sender'],
+      sentAt,
+      ...(normalizedStatus ? { status: normalizedStatus } : {}),
+    };
+  }
+
+  private parseDate(value: unknown): Date | null {
+    if (value === undefined || value === null) return null;
+    const date = new Date(String(value));
+    return Number.isNaN(date.getTime()) ? null : date;
   }
 }

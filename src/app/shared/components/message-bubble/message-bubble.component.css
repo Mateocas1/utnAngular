@@ -1,8 +1,24 @@
+.message-row {
+  display: flex;
+  width: 100%;
+}
+
+.message-row--user {
+  justify-content: flex-end;
+  padding-left: 64px;
+}
+
+.message-row--app {
+  justify-content: flex-start;
+  padding-right: 64px;
+}
+
 .bubble {
   display: flex;
   flex-direction: column;
-  max-width: 72%;
-  padding: 12px 15px;
+  width: fit-content;
+  max-width: min(74%, 520px);
+  padding: 11px 15px 12px;
   border-radius: 22px;
   word-break: break-word;
   border: 1px solid rgba(36, 52, 60, 0.08);
@@ -11,7 +27,6 @@
 }
 
 .bubble--user {
-  align-self: flex-end;
   background: var(--bubble-user-bg);
   color: var(--bubble-user-text);
   border-bottom-right-radius: 8px;
@@ -19,11 +34,21 @@
 }
 
 .bubble--app {
-  align-self: flex-start;
   background-color: var(--bubble-app-bg);
   color: var(--bubble-app-text);
   border-bottom-left-radius: 8px;
   backdrop-filter: blur(8px);
+}
+
+.bubble__sender {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 6px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0.82;
 }
 
 .bubble__text {
@@ -49,6 +74,28 @@
 .bubble__check {
   opacity: 0.8;
   flex-shrink: 0;
+}
+
+.bubble--app .bubble__meta {
+  align-self: flex-start;
+}
+
+.bubble--app .bubble__sender {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 767px) {
+  .message-row--user {
+    padding-left: 22px;
+  }
+
+  .message-row--app {
+    padding-right: 22px;
+  }
+
+  .bubble {
+    max-width: 86%;
+  }
 }
 
 @keyframes bubble-in {

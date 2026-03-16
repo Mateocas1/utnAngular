@@ -1,11 +1,13 @@
 <div class="app-shell">
-  <app-chat-list
-    class="app-shell__sidebar"
-    [class.app-shell__sidebar--hidden]="!showSidebar()"
-    [isDark]="isDark()"
-    (themeToggle)="toggleTheme()"
-  />
-  <main class="app-shell__main" [class.app-shell__main--hidden]="showSidebar()">
+  @if (!isAuthRoute()) {
+    <app-chat-list
+      class="app-shell__sidebar"
+      [class.app-shell__sidebar--hidden]="!showSidebar()"
+      [isDark]="isDark()"
+      (themeToggle)="toggleTheme()"
+    />
+  }
+  <main class="app-shell__main" [class.app-shell__main--hidden]="showSidebar() && !isAuthRoute()">
     <router-outlet />
   </main>
 </div>

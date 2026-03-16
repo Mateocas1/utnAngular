@@ -2,17 +2,16 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background:
-    radial-gradient(circle at top right, rgba(216, 100, 61, 0.08), transparent 26%),
-    linear-gradient(180deg, rgba(255, 252, 247, 0.94), rgba(250, 247, 241, 0.92));
+  background: var(--panel-bg);
   animation: panel-enter 0.3s ease-out;
 }
 
 .new-chat__header {
   padding: 28px 30px 18px;
-  border-bottom: 1px solid var(--border-color);
-  background-color: rgba(255, 253, 249, 0.78);
+  border-bottom: 1px solid var(--panel-outline);
+  background-color: var(--glass-bg);
   flex-shrink: 0;
+  backdrop-filter: blur(14px) saturate(145%);
 }
 
 .new-chat__eyebrow {
@@ -53,10 +52,11 @@
   gap: 20px;
   width: 100%;
   max-width: 560px;
-  border: 1px solid rgba(36, 52, 60, 0.08);
+  border: 1px solid var(--panel-outline);
   border-radius: 28px;
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: var(--shadow-card);
+  background: var(--glass-bg);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(14px) saturate(140%);
 }
 
 .form-field {
@@ -73,9 +73,9 @@
 
 .form-field__input {
   padding: 13px 15px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--panel-outline);
   border-radius: 18px;
-  background-color: var(--input-bg);
+  background-color: var(--glass-bg);
   color: var(--text-primary);
   font-size: 0.9rem;
   font-family: inherit;
@@ -85,7 +85,8 @@
 
 .form-field__input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  background-color: var(--glass-bg-strong);
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 10px 18px rgba(0, 0, 0, 0.14);
 }
 
 .form-field__input--error {
@@ -122,17 +123,17 @@
 .btn--primary {
   background: linear-gradient(135deg, var(--accent) 0%, #f08b60 100%);
   color: #fff;
-  box-shadow: 0 16px 28px rgba(216, 100, 61, 0.22);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.32), 0 18px 30px var(--accent-glow);
 }
 
 .btn--primary:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .btn--secondary {
-  background-color: rgba(255, 255, 255, 0.56);
+  background-color: var(--glass-bg);
   color: var(--text-primary);
-  border-color: rgba(36, 52, 60, 0.08);
+  border-color: var(--panel-outline);
 }
 
 .btn--secondary:hover {
@@ -141,10 +142,11 @@
 
 .new-chat__aside {
   padding: 22px;
-  border: 1px solid rgba(36, 52, 60, 0.08);
+  border: 1px solid var(--panel-outline);
   border-radius: 28px;
-  background: rgba(255, 255, 255, 0.46);
-  box-shadow: var(--shadow-card);
+  background: var(--glass-bg);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(14px) saturate(138%);
 }
 
 .new-chat__badge {
@@ -165,7 +167,8 @@
   margin-top: 18px;
   padding: 18px;
   border-radius: 22px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(246, 241, 234, 0.88));
+  background: linear-gradient(135deg, var(--glass-bg-strong), var(--glass-bg));
+  border: 1px solid var(--panel-outline);
 }
 
 .new-chat__preview-avatar {

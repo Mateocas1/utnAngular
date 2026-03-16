@@ -1,0 +1,93 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <header class="auth-card__header">
+      <h1>{{ copy.title }}</h1>
+      <p>{{ copy.subtitle }}</p>
+    </header>
+
+    <div class="auth-card__tabs" role="tablist" aria-label="Seleccionar autenticación">
+      <button
+        type="button"
+        role="tab"
+        [attr.aria-selected]="isLoginTab()"
+        [class.is-active]="isLoginTab()"
+        (click)="setTab('login')"
+      >
+        {{ copy.loginTab }}
+      </button>
+      <button
+        type="button"
+        role="tab"
+        [attr.aria-selected]="!isLoginTab()"
+        [class.is-active]="!isLoginTab()"
+        (click)="setTab('register')"
+      >
+        {{ copy.registerTab }}
+      </button>
+    </div>
+
+    @if (feedback(); as msg) {
+      <p class="auth-card__feedback" role="alert">{{ msg }}</p>
+    }
+
+    @if (isLoginTab()) {
+      <form class="auth-form" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+        <label class="auth-field">
+          <span>Email</span>
+          <input type="email" formControlName="email" autocomplete="email" />
+          @if (loginEmailError; as error) {
+            <small class="auth-field__error">{{ error }}</small>
+          }
+        </label>
+
+        <label class="auth-field">
+          <span>Contraseña</span>
+          <input type="password" formControlName="password" autocomplete="current-password" />
+          @if (loginPasswordError; as error) {
+            <small class="auth-field__error">{{ error }}</small>
+          }
+        </label>
+
+        <button type="submit" [disabled]="loginForm.invalid || isSubmitting()">{{ copy.loginButton }}</button>
+      </form>
+    } @else {
+      <form class="auth-form" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+        <label class="auth-field">
+          <span>Nombre</span>
+          <input type="text" formControlName="name" autocomplete="name" />
+          @if (registerNameError; as error) {
+            <small class="auth-field__error">{{ error }}</small>
+          }
+        </label>
+
+        <label class="auth-field">
+          <span>Email</span>
+          <input type="email" formControlName="email" autocomplete="email" />
+          @if (registerEmailError; as error) {
+            <small class="auth-field__error">{{ error }}</small>
+          }
+        </label>
+
+        <label class="auth-field">
+          <span>Contraseña</span>
+          <input type="password" formControlName="password" autocomplete="new-password" />
+          @if (registerPasswordError; as error) {
+            <small class="auth-field__error">{{ error }}</small>
+          }
+        </label>
+
+        <label class="auth-field">
+          <span>Confirmar contraseña</span>
+          <input type="password" formControlName="confirmPassword" autocomplete="new-password" />
+          @if (registerConfirmPasswordError; as error) {
+            <small class="auth-field__error">{{ error }}</small>
+          }
+        </label>
+
+        <button type="submit" [disabled]="registerForm.invalid || isSubmitting()">
+          {{ copy.registerButton }}
+        </button>
+      </form>
+    }
+  </div>
+</section>

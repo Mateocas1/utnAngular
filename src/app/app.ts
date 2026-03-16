@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, Renderer2 } from '@angular/core';
+import { Component, computed, effect, inject, Renderer2, signal } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -16,13 +16,16 @@ export class App {
 
   readonly isDark = signal(false);
 
-  readonly showSidebar = toSignal(
+  readonly currentPath = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
-      map((e) => (e as NavigationEnd).urlAfterRedirects === '/chats')
+      map((e) => (e as NavigationEnd).urlAfterRedirects)
     ),
-    { initialValue: true }
+    { initialValue: this.router.url }
   );
+
+  readonly isAuthRoute = computed(() => this.currentPath().startsWith('/auth'));
+  readonly showSidebar = computed(() => this.currentPath() === '/chats');
 
   constructor() {
     const savedTheme = localStorage.getItem('theme');

@@ -2,8 +2,8 @@
   display: flex;
   height: 100dvh;
   overflow: hidden;
-  padding: 24px;
-  gap: 20px;
+  padding: 22px;
+  gap: 18px;
   background: transparent;
 }
 
@@ -18,18 +18,36 @@
   flex-direction: column;
   min-width: 0;
   border: 1px solid var(--border-color);
-  border-radius: 32px;
-  background: var(--surface);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(18px);
+  border-radius: 30px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(18px) saturate(140%);
+  position: relative;
 }
 
 .app-shell__sidebar,
 .app-shell__main {
-  border: 1px solid var(--border-color);
-  border-radius: 32px;
+  border: 1px solid var(--panel-outline);
+  border-radius: 30px;
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px) saturate(132%);
+}
+
+.app-shell__main::before,
+.app-shell__sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--panel-overlay);
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+
+.app-shell__sidebar {
+  position: relative;
+  overflow: hidden;
 }
 
 @media (max-width: 767px) {
