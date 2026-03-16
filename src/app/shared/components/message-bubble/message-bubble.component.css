@@ -44,11 +44,25 @@
   display: inline-flex;
   width: fit-content;
   margin-bottom: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  opacity: 0.82;
+  border: 1px solid transparent;
+}
+
+.bubble--user .bubble__sender {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.34);
+  color: #fffaf6;
+}
+
+.bubble--app .bubble__sender {
+  background: rgba(0, 0, 0, 0.12);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text-secondary);
 }
 
 .bubble__text {
@@ -78,10 +92,6 @@
 
 .bubble--app .bubble__meta {
   align-self: flex-start;
-}
-
-.bubble--app .bubble__sender {
-  color: var(--text-secondary);
 }
 
 @media (max-width: 767px) {

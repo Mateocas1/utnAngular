@@ -1,6 +1,6 @@
 <div class="message-row" [class.message-row--user]="message().sender === 'user'" [class.message-row--app]="message().sender === 'app'">
   <div class="bubble" [class.bubble--user]="message().sender === 'user'" [class.bubble--app]="message().sender === 'app'">
-    <span class="bubble__sender">{{ message().sender === 'user' ? 'Vos' : 'Chat App' }}</span>
+    <span class="bubble__sender">{{ message().sender === 'user' ? 'Tu' : 'Chat App' }}</span>
     <p class="bubble__text">{{ message().content }}</p>
     <span class="bubble__meta">
       <span class="bubble__time">{{ message().sentAt | timeFormat }}</span>
